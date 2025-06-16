@@ -1,3 +1,5 @@
+import sys
+
 import pandas as pd
 import re
 
@@ -11,8 +13,9 @@ def check_ecclesiae_with_matches(charter_summary):
     matches = institution_pattern.findall(charter_summary)
     return (bool(matches), matches if matches else None)
 
-if __name__ == "__main__":
-    df = pd.read_csv('raw/konrad.csv')
+# @args filename - str name of the csv file; processes a single file, adding two columns with flag, if the charter summary contains 'ecclesiastical institutions' and if so, which
+def process_csv(filename):
+    df = pd.read_csv(f'raw/{filename}.csv')
 
     # Apply function and unpack results
     results = df['summary'].apply(check_ecclesiae_with_matches)
@@ -28,5 +31,10 @@ if __name__ == "__main__":
     print(f"True (ecclesiastical): {flag_counts.get(True, 0)}")
     print(f"False (non-ecclesiastical): {flag_counts.get(False, 0)}")
 
-    df.to_csv('./out/konrad_flagged.csv', index=False)
-    print("\nFlagged data exported to './raw/konrad_flagged.csv'")
+    df.to_csv(f'./out/{filename}_flagged.csv', index=False)
+
+
+
+if __name__ == "__main__":
+    process_csv('konrad')
+    process_csv('heinrich')
