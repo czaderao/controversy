@@ -12,7 +12,7 @@ def check_ecclesiae_with_matches(charter_summary):
     return (bool(matches), matches if matches else None)
 
 if __name__ == "__main__":
-    df = pd.read_csv('./res/konrad.csv')
+    df = pd.read_csv('raw/konrad.csv')
 
     # Apply function and unpack results
     results = df['summary'].apply(check_ecclesiae_with_matches)
@@ -28,5 +28,5 @@ if __name__ == "__main__":
     print(f"True (ecclesiastical): {flag_counts.get(True, 0)}")
     print(f"False (non-ecclesiastical): {flag_counts.get(False, 0)}")
 
-    df.to_csv('./res/konrad_flagged.csv', index=False)
-    print("\nFlagged data exported to './res/konrad_flagged.csv'")
+    df.to_csv('./out/konrad_flagged.csv', index=False)
+    print("\nFlagged data exported to './raw/konrad_flagged.csv'")

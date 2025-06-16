@@ -3,8 +3,8 @@ import requests
 import time
 from tqdm import tqdm
 
-INPUT_CSV = './res/konrad.csv'
-OUTPUT_CSV = './res/konrad_flagged.csv'
+INPUT_CSV = './raw/konrad.csv'
+OUTPUT_CSV = './raw/konrad_flagged.csv'
 PLACE_ID_COLUMN = "place_id"
 BATCH_SIZE = 50
 DELAY_BETWEEN_REQUESTS = 1  # seconds (as per Nominatim policy)
