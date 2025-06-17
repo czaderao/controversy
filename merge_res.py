@@ -28,10 +28,8 @@ def patch_missing_geocodes(raw_file: str):
                 row['matched_name'] = 'Fallback XY Patch'
         return row
 
-    print(f"[INFO] Patching unmatched entries using X/Y fallback for: {raw_file}")
     df = df.apply(patch_row, axis=1)
     df.to_csv(output_path, index=False)
-    print(f"[SUCCESS] Output written to: {output_path}")
 
 if __name__ == "__main__":
     patch_missing_geocodes('konrad')
