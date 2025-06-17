@@ -1,4 +1,4 @@
-A fun bit to show, whether the Holy roman emperors were passive-aggressive assholes to their subject bishops and other church personnel during the investiture controversy.
+Add geodata to regesta imperii charters. Flag that data for church-related personel.
 
 A very much work in progress.
 
