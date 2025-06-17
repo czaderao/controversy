@@ -1,5 +1,3 @@
-import sys
-
 import pandas as pd
 import re
 from pathlib import Path
