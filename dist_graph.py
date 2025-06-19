@@ -1,20 +1,37 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-# Load your CSV
 df = pd.read_csv('./raw/dist.csv')
+df = df[df['straightdis'] <= 20]
 
-mask = df['start_date'].isna()
-df.loc[mask, 'start_date'] = pd.to_datetime(df.loc[mask, 'start_date'], errors='coerce')
 
-df['year'] = df['start_date'].dt.year
-yearly_avg = df.groupby('year')['length'].mean().reset_index()
+df[['year', 'month', 'day']] = df['start_date'].str.split('/', expand=True).astype(float)
+yearly_avg = df.groupby('year')['straightdis'].mean().reset_index()
 
-plt.figure(figsize=(10, 5))
-plt.plot(yearly_avg['year'], yearly_avg['length'], marker='o')
+# All data
+yearly_all = df.groupby('year')['straightdis'].mean().reset_index()
+
+# Ecclesiastical only
+yearly_true = df[df['ecclesiastical_flag'] == True].groupby('year')['straightdis'].mean().reset_index()
+
+# Non-ecclesiastical
+yearly_false = df[df['ecclesiastical_flag'] == False].groupby('year')['straightdis'].mean().reset_index()
+
+# Convert degrees to km
+def deg_to_km(series):
+    return np.deg2rad(series) * 6371
+
+# Plot
+plt.figure(figsize=(19, 10))
+
+plt.plot(yearly_all['year'], deg_to_km(yearly_all['straightdis']), label='All', marker='o')
+plt.plot(yearly_true['year'], deg_to_km(yearly_true['straightdis']), label='Ecclesiastical', marker='o')
+plt.plot(yearly_false['year'], deg_to_km(yearly_false['straightdis']), label='Non-Ecclesiastical', marker='o')
 plt.title('Average Hub Distance per Year')
 plt.xlabel('Year')
-plt.ylabel('Average Hub Distance')
+plt.ylabel('Average Hub Distance (km)')
+plt.legend()
 plt.grid(True)
 plt.tight_layout()
 plt.show()
