@@ -3,7 +3,6 @@ import json
 from pathlib import Path
 
 def semgis_geocode(raw_file: str):
-    # Define platform-neutral paths
     raw_folder = Path('./raw')
     data_folder = Path('./out')
     csv_path = data_folder / f'{raw_file}_flagged.csv'
