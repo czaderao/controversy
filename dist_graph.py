@@ -19,8 +19,8 @@ def deg_to_km(series):
 
 plt.figure(figsize=(19, 10))
 plt.plot(yearly_all['year'], deg_to_km(yearly_all['straightdis']), label='All', marker='o')
-plt.plot(yearly_true['year'], deg_to_km(yearly_true['straightdis']), label='Ecclesiastical', marker='o')
-plt.plot(yearly_false['year'], deg_to_km(yearly_false['straightdis']), label='Non-Ecclesiastical', marker='o')
+plt.plot(yearly_true['year'], deg_to_km(yearly_true['straightdis']), label='Church-related', marker='o')
+plt.plot(yearly_false['year'], deg_to_km(yearly_false['straightdis']), label='Church-unrelated', marker='o')
 plt.title('Average Hub Distance per Year')
 plt.xlabel('Year')
 plt.ylabel('Average Hub Distance (km)')
