@@ -37,10 +37,10 @@ def semgis_geocode(raw_file: str):
 
     data_folder.mkdir(parents=True, exist_ok=True)
 
+    # i hate windows path names. this is where i tried to code on my windows vm and the path was incorrect. left it here
     try:
         df = pd.read_csv(csv_path)
     except FileNotFoundError:
-        print(f"CSV file not found: {csv_path}")
         return
 
     # Load JSON
@@ -91,7 +91,6 @@ def patch_missing_geocodes(raw_file: str):
     try:
         df = pd.read_csv(input_path)
     except FileNotFoundError:
-        print(f"[ERROR] Input file not found: {input_path}")
         return
 
     def is_valid_float(value):
@@ -112,7 +111,7 @@ def patch_missing_geocodes(raw_file: str):
     df = df.apply(patch_row, axis=1)
     df.to_csv(output_path, index=False)
 
-    # take a series of distances in degrees and convert the distances to kilometres
+# take a series of distances in degrees and convert the distances to kilometres
 def deg_to_km(series):
     return np.deg2rad(series) * 6371
 
@@ -128,8 +127,11 @@ if __name__ == '__main__':
     print(f'File {arg} has been processed')
 
     df = pd.read_csv('./raw/dist.csv')
+
+    # there are a few places where the geocoder(s) think the places are in america or asia. i think not
     df = df[df['straightdis'] <= 20]
 
+    # at least 4 hours wasted. why does pandas not support 11th century dates
     df[['year', 'month', 'day']] = df['start_date'].str.split('/', expand=True).astype(float)
     yearly_avg = df.groupby('year')['straightdis'].mean().reset_index()
 
@@ -137,7 +139,7 @@ if __name__ == '__main__':
     yearly_true = df[df['ecclesiastical_flag'] == True].groupby('year')['straightdis'].mean().reset_index()
     yearly_false = df[df['ecclesiastical_flag'] == False].groupby('year')['straightdis'].mean().reset_index()
 
-
+    # plot that thing
     plt.figure(figsize=(19, 10))
     plt.plot(yearly_all['year'], deg_to_km(yearly_all['straightdis']), label='All', marker='o')
     plt.plot(yearly_true['year'], deg_to_km(yearly_true['straightdis']), label='Church-related', marker='o')
