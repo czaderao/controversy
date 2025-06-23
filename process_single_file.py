@@ -37,20 +37,20 @@ def semgis_geocode(raw_file: str):
 
     data_folder.mkdir(parents=True, exist_ok=True)
 
-    # i hate windows path names. this is where i tried to code on my windows vm and the path was incorrect. left it here
+    # I hate windows path names. this is where I tried to code on my Windows vm and the path was incorrect. Left it here.
     try:
         df = pd.read_csv(csv_path)
     except FileNotFoundError:
         return
 
-    # Load JSON
+    # load JSON
     try:
         with open(json_path, 'r', encoding='utf-8') as f:
             loc_data = json.load(f)
     except FileNotFoundError:
         return
 
-    # Build lookup dict keyed by used_name.lower()
+    # build lookup dict keyed by used_name.lower()
     used_name_to_entry = {
         entry.get('used name').strip().lower(): entry
         for entry in loc_data.values()
@@ -69,7 +69,7 @@ def semgis_geocode(raw_file: str):
                     'matched_lon': prediction.get('longitude'),
                     'used_name': entry.get('used name')
                 })
-        # No match found
+        # no match found
         return pd.Series({
             'matched_name': None,
             'matched_lat': None,
@@ -82,12 +82,12 @@ def semgis_geocode(raw_file: str):
     df.to_csv(output_path, index=False)
 
 
-# compare the batch nominatim geocoded results together with the RI semgis results. Takes the semgis data as default for coordinates and where unavaliable, keep the nominatim.
+# compare the batch nominatim geocoded results together with the RI semgis results. Takes the semgis data as default for coordinates and where unavailable, keep the nominatim.
 def patch_missing_geocodes(raw_file: str):
     input_path = data_folder / f'{raw_file}_matched_by_locality.csv'
     output_path = data_folder / f'{raw_file}_patched.csv'
 
-    # Load data
+    # load data
     try:
         df = pd.read_csv(input_path)
     except FileNotFoundError:
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         argv = sys.argv[1]
     else:
-        arg = input('Input a .csv filename to process (without the .csv):')
+        arg = input('Input a .csv filename to process (without the .csv): ')
 
     # process the file
     process_csv(f'{arg}')
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     # load the hub distances
     df = pd.read_csv('./raw/dist.csv')
 
-    # there are a few places where the geocoder(s) think the places are in america or asia. i think not
+    # there are a few places where the geocoder(s) think the places are in america or asia. I think not
     df = df[df['straightdis'] <= 20]
 
     # at least 4 hours wasted. why does pandas not support 11th century dates
@@ -144,10 +144,10 @@ if __name__ == '__main__':
 
     # plot that thing
     plt.figure(figsize=(19, 10))
-    plt.plot(yearly_all['year'], deg_to_km(yearly_all['straightdis']), label='All', marker='o')
-    plt.plot(yearly_true['year'], deg_to_km(yearly_true['straightdis']), label='Church-related', marker='o')
-    plt.plot(yearly_false['year'], deg_to_km(yearly_false['straightdis']), label='Church-unrelated', marker='o')
-    plt.title('Average Hub Distance per Year')
+    plt.plot(yearly_all['year'], deg_to_km(yearly_all['straightdis']), label='All', marker='o', color='blue', linestyle='dashed')
+    plt.plot(yearly_false['year'], deg_to_km(yearly_false['straightdis']), label='Church-unrelated', marker='o', color='red')
+    plt.plot(yearly_true['year'], deg_to_km(yearly_true['straightdis']), label='Church-related', marker='o', color='green')
+    plt.title('Average Bishopric/Archbishopric Distance from charter origin per Year')
     plt.xlabel('Year')
     plt.ylabel('Average Hub Distance (km)')
     plt.legend()
