@@ -17,11 +17,14 @@ yearly_false = df[df['ecclesiastical_flag'] == False].groupby('year')['straightd
 def deg_to_km(series):
     return np.deg2rad(series) * 6371
 
+# plot that thing
 plt.figure(figsize=(19, 10))
-plt.plot(yearly_all['year'], deg_to_km(yearly_all['straightdis']), label='All', marker='o')
-plt.plot(yearly_true['year'], deg_to_km(yearly_true['straightdis']), label='Church-related', marker='o')
-plt.plot(yearly_false['year'], deg_to_km(yearly_false['straightdis']), label='Church-unrelated', marker='o')
-plt.title('Average Hub Distance per Year')
+plt.plot(yearly_all['year'], deg_to_km(yearly_all['straightdis']), label='All', marker='o', color='blue',
+         linestyle='dashed')
+plt.plot(yearly_false['year'], deg_to_km(yearly_false['straightdis']), label='Church-unrelated', marker='o',
+         color='red')
+plt.plot(yearly_true['year'], deg_to_km(yearly_true['straightdis']), label='Church-related', marker='o', color='green')
+plt.title('Average Bishopric/Archbishopric Distance from charter origin per Year during the reign of Henry IV.')
 plt.xlabel('Year')
 plt.ylabel('Average Hub Distance (km)')
 plt.legend()
