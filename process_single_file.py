@@ -17,7 +17,7 @@ def check_ecclesiae_with_matches(charter_summary):
     if pd.isna(charter_summary):
         return False, None
     matches = institution_pattern.findall(charter_summary)
-    return (bool(matches), matches if matches else None)
+    return bool(matches), matches if matches else None
 
 # processes a single file, adding two columns with flag, if the charter summary contains 'ecclesiastical institutions' and if so, which
 def process_csv(filename):
@@ -121,11 +121,14 @@ if __name__ == '__main__':
         argv = sys.argv[1]
     else:
         arg = input('Input a .csv filename to process (without the .csv):')
+
+    # process the file
     process_csv(f'{arg}')
     semgis_geocode(f'{arg}')
     patch_missing_geocodes(f'{arg}')
     print(f'File {arg} has been processed')
 
+    # load the hub distances
     df = pd.read_csv('./raw/dist.csv')
 
     # there are a few places where the geocoder(s) think the places are in america or asia. i think not
