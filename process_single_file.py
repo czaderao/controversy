@@ -17,8 +17,7 @@ data_folder = Path('./out')
 
 # check if a str contains any words from lst institutions and returns a boolean value and d lst containing the matched words
 def check_ecclesiae_with_matches(charter_summary):
-    institutions = ['bischof', 'erzbischof', 'abt', 'erzbischöfe', 'bischöfe', 'papst', 'päpste', 'domkapitels',
-                    'domkapitel', 'kloster', 'kapitel']
+    institutions = ['bischof', 'erzbischof', 'abt', 'erzbischöfe', 'bischöfe', 'papst', 'päpste', 'domkapitels', 'domkapitel', 'kloster', 'kapitel']
     institution_pattern = re.compile(r'\b(' + '|'.join(institutions) + r')\b', flags=re.IGNORECASE)
     if pd.isna(charter_summary):
         return False, None
@@ -121,7 +120,7 @@ def patch_missing_geocodes(raw_file: str):
 def deg_to_km(series):
     return np.deg2rad(series) * 6371
 
-# run for a single file processing. Input filename as just FILENAME without the .csv; ex. python3 process_single_file.py RI_all
+# run for a single file processing. Input filename as just FILENAME without the .csv; ex. python3 process_single_file.py RI_all; or don't if that's your thing. It plots the results into a neat graph.
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         argv = sys.argv[1]
@@ -134,16 +133,14 @@ if __name__ == '__main__':
     patch_missing_geocodes(f'{arg}')
     print(f'File {arg} has been processed')
 
-    # load the hub distances
+    # load the hub distances. NEEDS TO BE PRE-PROCESSED IN QGIS. I don't want to import that code here. It would be much pain.
     df = pd.read_csv('./raw/dist.csv')
 
-    # there are a few places where the geocoder(s) think the places are in america or asia. I think not
+    # there are a few places where the geocoder(s) think the places are in america or asia or something. I think not
     df = df[df['straightdis'] <= 20]
 
-    # at least 4 hours wasted. why does pandas not support 11th century dates
+    # at least 4 hours wasted. Why does pandas not support 11th century dates, one can only wander
     df[['year', 'month', 'day']] = df['start_date'].str.split('/', expand=True).astype(float)
-    yearly_avg = df.groupby('year')['straightdis'].mean().reset_index()
-
     yearly_all = df.groupby('year')['straightdis'].mean().reset_index()
     yearly_true = df[df['ecclesiastical_flag'] == True].groupby('year')['straightdis'].mean().reset_index()
     yearly_false = df[df['ecclesiastical_flag'] == False].groupby('year')['straightdis'].mean().reset_index()
