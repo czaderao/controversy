@@ -6,6 +6,12 @@ from matplotlib import pyplot as plt
 import json
 import numpy as np
 
+"""
+This program takes a raw .csv file from the Regesta Imperii and plots it according to the distance from the nearest seat of a bishopric or archbishopric.
+Currently, there is no implementation of the finding the nearest (arch)bishopric and it needs to be done in QGIS. This program prepares the data from that
+process and then plots them onto a graph.
+"""
+
 raw_folder = Path('./raw')
 data_folder = Path('./out')
 
